@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+struct Task {
+    string description;
+    bool completed;
+};
+
+class TodoList {
+private:
+    vector<Task> tasks;
+
+public:
+    void addTask(const string& description);
+    void viewTasks() const;
+    void markTaskAsCompleted(int index);
+    void removeTask(int index);
+};
+
+void TodoList::addTask(const string& description) {
+    Task newTask;
+    newTask.description = description;
+    newTask.completed = false;
+    tasks.push_back(newTask);
+    cout << "Tarefa adicionada com sucesso!\n";
+}
+
+void TodoList::viewTasks() const {
+    if (tasks.empty()) {
+        cout << "Não há tarefas na lista.\n";
+    } else {
+        cout << "Tarefas:\n";
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            cout << i + 1 << ". ";
+            cout << (tasks[i].completed ? "[X] " : "[ ] ");
+            cout << tasks[i].description << endl;
+        }
+    }
+}
+
+void TodoList::markTaskAsCompleted(int index) {
+    if (index >= 0 && index < tasks.size()) {
+        tasks[index].completed = true;
+        cout << "Tarefa marcada como concluída.\n";
+    } else {
+        cout << "Índice inválido.\n";
+    }
+}
+
+void TodoList::removeTask(int index) {
+    if (index >= 0 && index < tasks.size()) {
+        tasks.erase(tasks.begin() + index);
+        cout << "Tarefa removida com sucesso.\n";
+    } else {
+        cout << "Índice inválido.\n";
+    }
+}
+
+int main() {
+    TodoList todoList;
+    int choice;
+
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Adicionar Tarefa\n";
+        cout << "2. Visualizar Tarefas\n";
+        cout << "3. Marcar Tarefa como Concluída\n";
+        cout << "4. Remover Tarefa\n";
+        cout << "5. Sair\n";
+        cout << "Escolha: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                string description;
+                cout << "Digite a descrição da tarefa: ";
+                cin.ignore();
+                getline(cin, description);
+                todoList.addTask(description);
+                break;
+            }
+            case 2:
+                todoList.viewTasks();
+                break;
+            case 3: {
+                int index;
+                cout << "Digite o número da tarefa a ser marcada como concluída: ";
+                cin >> index;
+                todoList.markTaskAsCompleted(index - 1);
+                break;
+            }
+            case 4: {
+                int index;
+                cout << "Digite o número da tarefa a ser removida: ";
+                cin >> index;
+                todoList.removeTask(index - 1);
+                break;
+            }
+            case 5:
+                cout << "Saindo do programa.\n";
+                break;
+            default:
+                cout << "Escolha inválida. Tente novamente.\n";
+        }
+    } while (choice != 5);
+
+    return 0;
+}
